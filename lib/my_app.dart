@@ -14,14 +14,16 @@ class _MyAppState extends State<MyApp> {
   static const int maxBack = 255;
   static const int minTitle = 0;
   static const int maxTitle = 155;
+  static const double opacityBack = 0.6;
+  static const double opacityTitle = 1;
+
   Color backgroundColor = Colors.white;
   Color titleColor = Colors.black;
 
   @override
   void initState() {
-    backgroundColor = _getRandomColor(minBack, maxBack);
-    titleColor = _getRandomColor(minTitle, maxTitle);
-
+    backgroundColor = _getRandomColor(minBack, maxBack, opacityBack);
+    titleColor = _getRandomColor(minTitle, maxTitle, opacityTitle);
     super.initState();
   }
 
@@ -37,8 +39,8 @@ class _MyAppState extends State<MyApp> {
           onTap: () {
             setState(() {
               title = upperRandomLetter(title);
-              backgroundColor = _getRandomColor(minBack, maxBack);
-              titleColor = _getRandomColor(minTitle, maxTitle);
+              backgroundColor = _getRandomColor(minBack, maxBack, opacityBack);
+              titleColor = _getRandomColor(minTitle, maxTitle, opacityTitle);
             });
           },
           child: Container(
@@ -61,12 +63,16 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Color _getRandomColor(int min, int max) {
+  Color _getRandomColor(int min, int max, double opacity) {
+    if (opacity > 1 || opacity < 0) {
+      throw Exception(
+          'opacity is alpha channel of this color as a double, with 0.0 being transparent and 1.0 being fully opaque');
+    }
     final random = Random();
+
     final r = random.nextInt(max - min) + min;
     final g = random.nextInt(max - min) + min;
     final b = random.nextInt(max - min) + min;
-    const opacity = 1.0;
 
     return Color.fromRGBO(r, g, b, opacity);
   }
